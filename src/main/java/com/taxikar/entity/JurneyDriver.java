@@ -13,9 +13,9 @@ import java.sql.Timestamp;
 @Table(name = "jurney_driver")
 public class JurneyDriver {
     @Id
-    private Long id;
+    private String id;
     @Column(name = "USER_ID")
-    private Long userId;
+    private String userId;
     @Column(name = "START_POS")
     private String startPos;
     @Column(name = "END_POS")
@@ -32,20 +32,19 @@ public class JurneyDriver {
     private String description;
 
     public JurneyDriver(){}
-    public JurneyDriver(Long userId, String startPos, String  endPos, Timestamp startTime, int seatNumber, Long price){
+    public JurneyDriver(String userId, String startPos, String  endPos, Timestamp startTime, int seatNumber){
         this.userId = userId;
         this.startPos = startPos;
         this.endPos = endPos;
         this.startTime = startTime;
         this.seatNumber = seatNumber;
-        this.price = price;
     }
 
-    public Long getId(){return id;}
-    public void setId(Long id){this.id = id;}
+    public String getId(){return id;}
+    public void setId(String id){this.id = id;}
 
-    public Long getUserId(){return userId;}
-    public void setUserId(Long userId){this.userId = userId;}
+    public String getUserId(){return userId;}
+    public void setUserId(String userId){this.userId = userId;}
 
     public String getStartPos(){return startPos;}
     public void setStartPos(String startPos){this.startPos = startPos;}

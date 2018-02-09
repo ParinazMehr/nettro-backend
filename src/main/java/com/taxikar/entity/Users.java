@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 @Table(name = "users")
 public class Users {
     @Id
-    private Long id;
+    private String id;
     @Column(name = "FIRST_NAME")
     private String firstName;
     @Column(name = "LAST_NAME")
@@ -44,8 +44,8 @@ public class Users {
         this.status = status;
     }
 
-    public Long getId(){return id;}
-    public void setId(Long id){this.id = id;}
+    public String getId(){return id;}
+    public void setId(String id){this.id = id;}
 
     public String getFirstName(){return firstName;}
     public void setFirstName(String firstName){this.firstName = firstName;}

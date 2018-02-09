@@ -12,9 +12,9 @@ import javax.persistence.Table;
 @Table(name = "vehicle")
 public class Vehicle {
     @Id
-    private Long id;
+    private String id;
     @Column(name = "USER_ID")
-    private Long userId;
+    private String userId;
     @Column(name = "PLATE_NUMBER")
     private String plateNumber;
     @Column(name = "CAR_CARD")
@@ -25,16 +25,16 @@ public class Vehicle {
     private String description;
 
     public Vehicle(){}
-    public Vehicle(Long userId, String plateNumber){
+    public Vehicle(String userId, String plateNumber){
         this.userId = userId;
         this.plateNumber = plateNumber;
     }
 
-    public Long getId(){return id;}
-    public void setId(Long id){this.id = id;}
+    public String getId(){return id;}
+    public void setId(String id){this.id = id;}
 
-    public Long getUserId(){return userId;}
-    public void setUserId(Long userId){this.userId = userId;}
+    public String getUserId(){return userId;}
+    public void setUserId(String userId){this.userId = userId;}
 
     public String getPlateNumber(){return plateNumber;}
     public void setPlateNumber(String plateNumber){this.plateNumber = plateNumber;}
