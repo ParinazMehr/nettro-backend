@@ -6,13 +6,13 @@ import java.sql.Timestamp;
  * Created by parinaz on 2/9/2018.
  */
 public class JurneyDriverRequest {
-    private Long userId;
+    private String userId;
     private String startPos;
     private String endPos;
     private Timestamp startTime;
     private int seatNumber;
 
-    public JurneyDriverRequest(Long userId, String startPos, String endPos, Timestamp startTime, int seatNumber){
+    public JurneyDriverRequest(String userId, String startPos, String endPos, Timestamp startTime, int seatNumber){
         this.userId = userId;
         this.startPos = startPos;
         this.endPos = endPos;
@@ -20,8 +20,8 @@ public class JurneyDriverRequest {
         this.seatNumber = seatNumber;
     }
 
-    public Long getUserId(){return userId;}
-    public void setUserId(Long userId){this.userId = userId;}
+    public String getUserId(){return userId;}
+    public void setUserId(String userId){this.userId = userId;}
 
     public String getStartPos(){return startPos;}
     public void setStartPos(String startPos){this.startPos = startPos;}

@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Table(name = "driver_detail")
 public class DriverDetail {
     @Id
-    private Long id;
+    private String id;
     @Column(name = "STATUS")
     private int status;
     @Column(name = "LICENCE_IMG")
@@ -23,8 +23,8 @@ public class DriverDetail {
     public DriverDetail(){}
     public DriverDetail(int status){this.status = status;}
 
-    public Long getId(){return id;}
-    public void setId(Long id){this.id = id;}
+    public String getId(){return id;}
+    public void setId(String id){this.id = id;}
 
     public int getStatus(){return status;}
     public void setStatus(int status){this.status = status;}

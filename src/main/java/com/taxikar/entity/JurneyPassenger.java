@@ -13,9 +13,9 @@ import java.sql.Timestamp;
 @Table(name = "jurney_passenger")
 public class JurneyPassenger {
     @Id
-    private Long id;
+    private String id;
     @Column(name = "USER_ID")
-    private Long userId;
+    private String userId;
     @Column(name = "START_POS")
     private String startPos;
     @Column(name = "END_POS")
@@ -34,7 +34,7 @@ public class JurneyPassenger {
     private int rank;
 
     public JurneyPassenger(){}
-    public JurneyPassenger(Long userId, String startPos, String endPos, int seatNumber, Timestamp startTime, Timestamp endTime){
+    public JurneyPassenger(String userId, String startPos, String endPos, int seatNumber, Timestamp startTime, Timestamp endTime){
         this.userId = userId;
         this.startPos = startPos;
         this.endPos = endPos;
@@ -44,11 +44,11 @@ public class JurneyPassenger {
 
     }
 
-    public Long getId(){return id;}
-    public void setId(Long id){this.id = id;}
+    public String getId(){return id;}
+    public void setId(String id){this.id = id;}
 
-    public Long getUserId(){return userId;}
-    public void setUserId(Long userId){this.userId = userId;}
+    public String getUserId(){return userId;}
+    public void setUserId(String userId){this.userId = userId;}
 
     public String getStartPos(){return startPos;}
     public void setStartPos(String startPos){this.startPos = startPos;}
