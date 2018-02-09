@@ -15,8 +15,8 @@ public class DriverDetail {
     private Long id;
     @Column(name = "STATUS")
     private int status;
-    @Column(name = "LISENCE_IMG")
-    private String lisenceImg;
+    @Column(name = "LICENCE_IMG")
+    private String licenceImg;
     @Column(name = "INSURANCE_IMG")
     private String insuranceImg;
 
@@ -29,8 +29,8 @@ public class DriverDetail {
     public int getStatus(){return status;}
     public void setStatus(int status){this.status = status;}
 
-    public String getLisenceImg(){return lisenceImg;}
-    public void setLisenceImg(String lisenceImg){this.lisenceImg = lisenceImg;}
+    public String getLisenceImg(){return licenceImg;}
+    public void setLisenceImg(String lisenceImg){this.licenceImg = lisenceImg;}
 
     public String getInsuranceImg(){return insuranceImg;}
     public void setInsuranceImg(String insuranceImg){this.insuranceImg = insuranceImg;}
