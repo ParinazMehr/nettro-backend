@@ -1,45 +1,20 @@
-package com.taxikar.entity;
+package com.taxikar.bean.request;
 
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * Created by parinaz on 2/8/2018.
+ * Created by parinaz on 2/10/2018.
  */
-@Entity
-@Table(name = "jurney_driver")
-public class JurneyDriver {
-    @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
+public class EditJourneyDriverRequest {
     private String id;
-    @Column(name = "USER_ID")
     private String userId;
-    @Column(name = "START_POS")
     private String startPos;
-    @Column(name = "END_POS")
     private String endPos;
-    @Column(name = "START_TIME")
     private Timestamp startTime;
-    @Column(name = "SEAT_NUMBER")
     private int seatNumber;
-    @Column(name = "PRICE")
     private Long price;
-    @Column(name = "EVENT")
     private Long event;
-    @Column(name = "DESCRIPTION")
     private String description;
-
-    public JurneyDriver(){}
-    public JurneyDriver(String userId, String startPos, String  endPos, Timestamp startTime, int seatNumber){
-        this.userId = userId;
-        this.startPos = startPos;
-        this.endPos = endPos;
-        this.startTime = startTime;
-        this.seatNumber = seatNumber;
-    }
 
     public String getId(){return id;}
     public void setId(String id){this.id = id;}
@@ -51,13 +26,13 @@ public class JurneyDriver {
     public void setStartPos(String startPos){this.startPos = startPos;}
 
     public String getEndPos(){return endPos;}
-    public void setEndPos(String endPos){this.endPos = endPos;}
+    public void setEndPos(String endPos){this.endPos=endPos;}
 
     public Timestamp getStartTime(){return startTime;}
-    public void setStartTime(Timestamp startTime){this.startTime = startTime;}
+    private void setStartTime(Timestamp startTime){this.startTime = startTime;}
 
     public int getSeatNumber(){return seatNumber;}
-    public void setSeatNumber(int seatNumber){}
+    public void setSeatNumber(int seatNumber){this.seatNumber = seatNumber;}
 
     public Long getPrice(){return price;}
     public void setPrice(Long price){this.price = price;}
