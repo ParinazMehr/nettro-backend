@@ -19,7 +19,7 @@ public class Users {
     @Column(name = "LAST_NAME")
     private String lastName;
     @Column(name = "MOBILE_NUMBER")
-    private Long mobileNumber;
+    private String mobileNumber;
     @Column(name = "EMAIL")
     private String email;
     @Column(name = "STATUS")
@@ -35,8 +35,8 @@ public class Users {
     @Column(name = "USER_IMG")
     private String userImg;
 
-    public Users(){}
-    public Users(String firstName, String lastName, Long mobileNumber, String email, int status){
+    public Users(String mobileNumber){this.mobileNumber=mobileNumber;status=1;}
+    public Users(String firstName, String lastName, String mobileNumber, String email, int status){
         this.firstName = firstName;
         this.lastName = lastName;
         this.mobileNumber = mobileNumber;
@@ -53,8 +53,8 @@ public class Users {
     public String getLastName(){return lastName;}
     public void setLastName(String lastName){this.lastName = lastName;}
 
-    public Long getMobileNumber(){return mobileNumber;}
-    public void setMobileNumber(Long mobileNumber){this.mobileNumber = mobileNumber;}
+    public String getMobileNumber(){return mobileNumber;}
+    public void setMobileNumber(String mobileNumber){this.mobileNumber = mobileNumber;}
 
     public String getEmail(){return email;}
     public void setEmail(String email){this.email = email;}
