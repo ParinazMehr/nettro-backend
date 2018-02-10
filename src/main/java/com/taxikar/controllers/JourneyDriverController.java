@@ -3,7 +3,7 @@ package com.taxikar.controllers;
 import com.taxikar.bean.request.EditJourneyDriverRequest;
 import com.taxikar.bean.request.JurneyDriverRequest;
 import com.taxikar.bean.response.JourneyDriverBaseResponse;
-import com.taxikar.services.JourneyDriverService;
+import com.taxikar.service.JourneyDriverService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

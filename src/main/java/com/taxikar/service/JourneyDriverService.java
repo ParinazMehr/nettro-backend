@@ -1,4 +1,4 @@
-package com.taxikar.services;
+package com.taxikar.service;
 
 import com.taxikar.bean.request.EditJourneyDriverRequest;
 import com.taxikar.bean.request.JurneyDriverRequest;
