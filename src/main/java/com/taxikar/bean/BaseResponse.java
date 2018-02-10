@@ -1,14 +1,14 @@
-package com.taxikar.bean.response;
+package com.taxikar.bean;
 
 /**
  * Created by parinaz on 2/9/2018.
  */
-public class JourneyDriverBaseResponse {
+public class BaseResponse {
     private int status;
     private String errorMessage;
 
-    public JourneyDriverBaseResponse(){}
-    public JourneyDriverBaseResponse(int status, String errorMessage){
+    public BaseResponse(){}
+    public BaseResponse(int status, String errorMessage){
         this.status = status;
         this.errorMessage = errorMessage;
     }

@@ -2,7 +2,7 @@ package com.taxikar.controllers;
 
 import com.taxikar.bean.request.EditJourneyDriverRequest;
 import com.taxikar.bean.request.JurneyDriverRequest;
-import com.taxikar.bean.response.JourneyDriverBaseResponse;
+import com.taxikar.bean.BaseResponse;
 import com.taxikar.service.JourneyDriverService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,21 +27,21 @@ public class JourneyDriverController {
 
     @RequestMapping("/journey/driver/add")
     @ResponseBody
-    public JourneyDriverBaseResponse addJourneyDriver(@RequestBody JurneyDriverRequest request){
+    public BaseResponse addJourneyDriver(@RequestBody JurneyDriverRequest request){
         logger.info("adding a journey from driver to database");
         return journeyDriverService.addNewJourney(request);
     }
 
     @RequestMapping("journey/driver/delete")
     @ResponseBody
-    public JourneyDriverBaseResponse deleteJourney(@RequestBody String id){
+    public BaseResponse deleteJourney(@RequestBody String id){
         logger.info("deleting journey with id: "+id);
         return journeyDriverService.deleteJourney(id);
     }
 
     @RequestMapping("journey/driver/edit")
     @ResponseBody
-    public JourneyDriverBaseResponse editJourney(@RequestBody EditJourneyDriverRequest request){
+    public BaseResponse editJourney(@RequestBody EditJourneyDriverRequest request){
         logger.info("editing driver journey with id "+request.getId());
         return journeyDriverService.editDetails(request);
     }

@@ -2,7 +2,7 @@ package com.taxikar.service;
 
 import com.taxikar.bean.request.EditJourneyDriverRequest;
 import com.taxikar.bean.request.JurneyDriverRequest;
-import com.taxikar.bean.response.JourneyDriverBaseResponse;
+import com.taxikar.bean.BaseResponse;
 import com.taxikar.entity.JurneyDriver;
 import com.taxikar.repository.JurneyDriverRepository;
 import org.slf4j.Logger;
@@ -25,7 +25,7 @@ public class JourneyDriverService {
         this.jurneyDriverRepository = jurneyDriverRepository;
     }
 
-    public JourneyDriverBaseResponse addNewJourney(JurneyDriverRequest request){
+    public BaseResponse addNewJourney(JurneyDriverRequest request){
         //check this driver does not have a trip in the input time
         List<JurneyDriver> jr = jurneyDriverRepository.getSpecificPrice(request.getUserId(), request.getStartTime());
         if(jr.size()==0){
@@ -33,22 +33,24 @@ public class JourneyDriverService {
             //add to repository
             JurneyDriver jurneyDriver = new JurneyDriver(request.getUserId(), request.getStartPos(), request.getEndPos(), request.getStartTime(), request.getSeatNumber());
             jurneyDriverRepository.save(jurneyDriver);
-            return new JourneyDriverBaseResponse(1, "no error");
+            return new BaseResponse(1, "no error");
         }
         else logger.error("there is already a trip in this time for the driver");
-        return new JourneyDriverBaseResponse(0, "You already have a trip in this time");
+        return new BaseResponse(0, "You already have a trip in this time");
     }
 
-    public JourneyDriverBaseResponse deleteJourney(String id){
+    public BaseResponse deleteJourney(String id){
         //find the journey remove, if not exist return an error
         JurneyDriver jurneyDriver = jurneyDriverRepository.getOneJourney(id);
         if(jurneyDriver==null){
             logger.error("Jurney with id "+id+" does not exist");
-            return new JourneyDriverBaseResponse(0, "journey with id "+id+" does not exist");
-        }else return new JourneyDriverBaseResponse(1, "no error");
+            return new BaseResponse(0, "journey with id "+id+" does not exist");
+        }else
+            jurneyDriverRepository.delete(jurneyDriver);
+            return new BaseResponse(1, "no error");
     }
 
-    public JourneyDriverBaseResponse editDetails(EditJourneyDriverRequest request){
+    public BaseResponse editDetails(EditJourneyDriverRequest request){
         JurneyDriver jurneyDriver = jurneyDriverRepository.getOneJourney(request.getId());
         jurneyDriver.setUserId(request.getUserId());
         jurneyDriver.setStartPos(request.getStartPos());
@@ -59,6 +61,6 @@ public class JourneyDriverService {
         jurneyDriver.setEvent(request.getEvent());
         jurneyDriver.setDescription(request.getDescription());
         jurneyDriverRepository.save(jurneyDriver);
-        return new JourneyDriverBaseResponse(1,"no error");
+        return new BaseResponse(1,"no error");
     }
 }
