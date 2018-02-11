@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -62,5 +63,17 @@ public class JourneyDriverService {
         jurneyDriver.setDescription(request.getDescription());
         jurneyDriverRepository.save(jurneyDriver);
         return new BaseResponse(1,"no error");
+    }
+
+    public List<JurneyDriver> getAllActive(String id){
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        List<JurneyDriver> driverList = jurneyDriverRepository.getAllActive(id, time);
+        return driverList;
+    }
+
+    public List<JurneyDriver> getAllPast(String id){
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        List<JurneyDriver> driverList = jurneyDriverRepository.getAllPast(id, time);
+        return driverList;
     }
 }
