@@ -10,6 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
+
 /**
  * Created by parinaz on 2/10/2018.
  */
@@ -54,5 +58,20 @@ public class JourneyPassengerService {
             jurneyPassengerRepository.save(jurneyPassenger);
             return new BaseResponse(1, "No error");
         }
+    }
+
+    public List<JurneyPassenger> getActiveTrips(String id){
+        //get the time
+        Timestamp time = new Timestamp( System.currentTimeMillis());
+        //get the list from db
+        List<JurneyPassenger> list = jurneyPassengerRepository.getAllActive(id,time);
+        //analys and send it back
+        return list;
+    }
+
+    public List<JurneyPassenger> getPastTrips(String id){
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        List<JurneyPassenger> list = jurneyPassengerRepository.getAllPast(id, time);
+        return list;
     }
 }
