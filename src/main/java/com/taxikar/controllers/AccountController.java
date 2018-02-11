@@ -29,21 +29,21 @@ public class AccountController
     }
 
     @RequestMapping(value = "/Login/{mobileNumber}",method = RequestMethod.POST )
-    public String Login(@PathVariable("mobileNumber") String mobileNumber)
+    public String Login(@PathVariable String mobileNumber)
     {
         logger.debug("Starting Login Process");
         return accountService.Login(mobileNumber);
     }
 
     @RequestMapping(value="/Account/EditUser/{mobileNumber}")
-    public boolean EditUser(@RequestBody UsersInfo request,@PathVariable("mobileNumber") String mobileNumber)
+    public boolean EditUser(@RequestBody UsersInfo request,@PathVariable String mobileNumber)
     {
         logger.debug("Editing Users Info");
         return accountService.EditUser(request,mobileNumber);
     }
 
     @RequestMapping(value = "/Account/GetUserInfo/{mobileNumber}",method = RequestMethod.POST)
-    public UsersInfo GetUserInfo(@PathVariable("mobileNumber") String mobileNumber)
+    public UsersInfo GetUserInfo(@PathVariable String mobileNumber)
     {
         logger.debug("Passing Users Info to Client side UI");
         return accountService.GetUserInfo(mobileNumber);
