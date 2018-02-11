@@ -1,6 +1,7 @@
 package com.taxikar.service;
 
 import com.taxikar.bean.BaseResponse;
+import com.taxikar.bean.request.EditJourneyPassengerRequest;
 import com.taxikar.bean.request.JourneyPassenger;
 import com.taxikar.entity.JurneyPassenger;
 import com.taxikar.repository.JurneyPassengerRepository;
@@ -28,7 +29,7 @@ public class JourneyPassengerService {
         JurneyPassenger jurneyPassenger = new JurneyPassenger(request.getUserId(), request.getStartPos(), request.getEndPos(),
                 request.getSeatNumber(), request.getStartTime(), request.getEndTime());
         jurneyPassengerRepository.save(jurneyPassenger);
-        return new BaseResponse(1,"no error");
+        return new BaseResponse(1,"No error");
     }
 
     public BaseResponse deleteJourney(String id){
@@ -38,7 +39,20 @@ public class JourneyPassengerService {
         return new BaseResponse(1,"No error");
     }
 
-    /*public BaseResponse editJourney(){
-
-    }*/
+    public BaseResponse editJourney(EditJourneyPassengerRequest request){
+        JurneyPassenger jurneyPassenger = jurneyPassengerRepository.getOneWithId(request.getId());
+        if(jurneyPassenger==null) return new BaseResponse(0,"no journey with this request id exists");
+        else {
+            jurneyPassenger.setStartPos(request.getStartPos());
+            jurneyPassenger.setEndPos(request.getEndPos());
+            jurneyPassenger.setMaxPrice(request.getMaxPrice());
+            jurneyPassenger.setStartTime(request.getStartTime());
+            jurneyPassenger.setEndTime(request.getEndTime());
+            jurneyPassenger.setSeatNumber(request.getSeatNumber());
+            jurneyPassenger.setStatus(request.getStatus());
+            jurneyPassenger.setRank(request.getRank());
+            jurneyPassengerRepository.save(jurneyPassenger);
+            return new BaseResponse(1, "No error");
+        }
+    }
 }

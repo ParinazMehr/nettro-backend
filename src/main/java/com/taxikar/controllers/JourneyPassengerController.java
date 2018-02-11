@@ -1,11 +1,13 @@
 package com.taxikar.controllers;
 
 import com.taxikar.bean.BaseResponse;
+import com.taxikar.bean.request.EditJourneyPassengerRequest;
 import com.taxikar.bean.request.JourneyPassenger;
 import com.taxikar.service.JourneyPassengerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -36,9 +38,10 @@ public class JourneyPassengerController {
     }
 
 
-    /*@RequestMapping("/journey/passenger/edit")
+    @RequestMapping("/journey/passenger/edit")
     @ResponseBody
-    public BaseResponse editJourney(){
-        logger.info("");
-    }*/
+    public BaseResponse editJourney(@RequestBody EditJourneyPassengerRequest request){
+        logger.info("Ediding user with id "+request.getId());
+        return journeyPassengerService.editJourney(request);
+    }
 }
