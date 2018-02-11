@@ -34,8 +34,18 @@ public class Users {
     private String description;
     @Column(name = "USER_IMG")
     private String userImg;
+    @Column(name = "TOKEN")
+    private String token;
+    @Column(name = "TOKEN_TIME_STAMP")
+    private Long tokenTimeStamp;
 
-    public Users(String mobileNumber){this.mobileNumber=mobileNumber;status=1;}
+
+    public Users(String mobileNumber,String token)
+    {
+        this.mobileNumber=mobileNumber;status=1;this.token=token;
+        this.tokenTimeStamp=System.currentTimeMillis();
+        this.status=0;
+    }
     public Users(String firstName, String lastName, String mobileNumber, String email, int status){
         this.firstName = firstName;
         this.lastName = lastName;
@@ -76,4 +86,20 @@ public class Users {
 
     public String getUserImg(){return userImg;}
     public void setUserImg(String userImg){this.userImg = userImg;}
+
+    public String getToken()
+    {
+        if((tokenTimeStamp+(5*60*1000)) < (System.currentTimeMillis()))
+            return  "PassedTimeToken";
+        return token;
+    }
+
+    public void setToken(String token)
+    {
+        this.token = token;
+        this.tokenTimeStamp=System.currentTimeMillis();
+    }
+
+
+
 }

@@ -1,9 +1,13 @@
 package com.taxikar.service;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
+import com.taxikar.bean.BaseResponse;
 import com.taxikar.bean.UsersInfo;
 import com.taxikar.entity.Users;
+import com.taxikar.enums.ResponseStatus;
 import com.taxikar.repository.UserRepository;
 
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,56 +19,83 @@ public class AccountService
 {
     @Autowired
     private UserRepository userRepository;
-
-    public String SendSMS(String mobileNumber)
+    // send sms and login should be with registration
+    public BaseResponse SendSMS(String mobileNumber)
     {
+        BaseResponse baseResponse=new BaseResponse();
         Random random = new Random();
+
         String rand=String.format("%04d", random.nextInt(10000));
+        Users user;
+        try
+        {
+            user=userRepository.FindUserByMobileNumber(mobileNumber);
+            user.setToken(rand);
+//            if(user==null)
+//                user=new Users(mobileNumber,rand);
+        }
+        catch (Exception P)
+        {
+            user=new Users(mobileNumber,rand);
+        }
         try
         {
             //send SMS TO mobileNumber : rand
             //********* Need Edit
+            baseResponse.setStatus(1);
         }
         catch (Exception P)
         {
-            rand="error";
+            baseResponse.setErrorMessage(P.toString());
+            baseResponse.setStatus(0);
         }
-        return  rand;
+        return  baseResponse;
     }
-    public String Login(String mobileNumber)
+    public BaseResponse Login(String mobileNumber, String rand)
     {
-        // go find user with this mobile number in table Users if the was'nt any --->
-            new Users(mobileNumber);
-        //      2.return "NewUser";
-        //else find user whit this mobile number in table Users and ----> return user.Status
-        //********* Need Edit of crud repository
-        return "teMP";
+        BaseResponse baseResponse=new BaseResponse();
+        Users user=userRepository.FindUserByMobileNumber(mobileNumber);
+        if(!user.getToken().equals(rand)  || user.getToken().equals("PassedTimeToken"))
+        {
+            baseResponse.setStatus(0);
+            baseResponse.setErrorMessage("Not Valid Code Entered");
+            return baseResponse;
+        }
+        baseResponse.setStatus(1);
+        return baseResponse;
     }
-
-
-    public Boolean EditUser(UsersInfo NewUserValues, String mobileNumber)
+    public BaseResponse EditUser(UsersInfo NewUserValues, String mobileNumber)
     {
-        // ********* Need Edit
-        // 1. find the user with this phone number
-        Users selectedUser=new Users(mobileNumber);//after doing above line we will have an user and this line should be deleted
-
-        selectedUser.setBirthday(NewUserValues.getBirthday());
-        selectedUser.setDescription(NewUserValues.getDescription());
-        selectedUser.setDriverDetail(NewUserValues.getDriverDetail());
-        selectedUser.setEmail(NewUserValues.getEmail());
-        selectedUser.setFirstName(NewUserValues.getFirstName());
-        selectedUser.setLastName(NewUserValues.getLastName());
-        selectedUser.setSex(NewUserValues.getSex());
-        selectedUser.setUserImg(NewUserValues.getUserImg());
-        return true;
-        // True means done successfully false means otherwise
+        BaseResponse baseResponse=new BaseResponse();
+        try
+        {
+            // 1. find the user with this phone number
+            Users selectedUser = userRepository.FindUserByMobileNumber(mobileNumber);
+            selectedUser.setBirthday(NewUserValues.getBirthday());
+            selectedUser.setDescription(NewUserValues.getDescription());
+            selectedUser.setDriverDetail(NewUserValues.getDriverDetail());
+            selectedUser.setEmail(NewUserValues.getEmail());
+            selectedUser.setFirstName(NewUserValues.getFirstName());
+            selectedUser.setLastName(NewUserValues.getLastName());
+            selectedUser.setSex(NewUserValues.getSex());
+            selectedUser.setUserImg(NewUserValues.getUserImg());
+            userRepository.save(selectedUser);
+            baseResponse.setStatus(1);
+        }
+        catch (Exception error)
+        {
+            baseResponse.setErrorMessage(error.toString());
+            baseResponse.setStatus(0);
+        }
+        return  baseResponse;
     }
     public UsersInfo GetUserInfo(String mobileNumber)
     {
-        //********* Need Edit
-        //find user with this mobile number
-        Users selectedUser=new Users(mobileNumber);//after doing above line we will have an user and this line should be deleted
-
+        Users selectedUser=userRepository.FindUserByMobileNumber(mobileNumber);
         return new UsersInfo(selectedUser.getFirstName(),selectedUser.getLastName(),selectedUser.getMobileNumber(),selectedUser.getEmail(),selectedUser.getStatus(),selectedUser.getSex(),selectedUser.getBirthday(),selectedUser.getDriverDetail(),selectedUser.getDescription(),selectedUser.getUserImg());
+    }
+    public int GetUserStatus(String mobileNumber)
+    {
+        return userRepository.FindUserByMobileNumber(mobileNumber).getStatus();
     }
 }

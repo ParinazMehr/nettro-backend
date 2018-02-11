@@ -1,5 +1,6 @@
 package com.taxikar.controllers;
 
+import com.taxikar.bean.BaseResponse;
 import com.taxikar.bean.UsersInfo;
 import com.taxikar.entity.Users;
 import com.taxikar.service.AccountService;
@@ -22,21 +23,21 @@ public class AccountController
     private AccountService accountService;
 
     @RequestMapping(value = "/SendSMS/{mobileNumber}",method = RequestMethod.POST )
-    public String SendSMS(@PathVariable String mobileNumber)
+    public BaseResponse SendSMS(@PathVariable String mobileNumber)
     {
         logger.debug("Sending SMS");
         return accountService.SendSMS(mobileNumber);
     }
 
-    @RequestMapping(value = "/Login/{mobileNumber}",method = RequestMethod.POST )
-    public String Login(@PathVariable String mobileNumber)
+    @RequestMapping(value = "/Login/{mobileNumber}/{rand}",method = RequestMethod.POST )
+    public BaseResponse Login(@PathVariable String mobileNumber,@PathVariable String rand)
     {
         logger.debug("Starting Login Process");
-        return accountService.Login(mobileNumber);
+        return accountService.Login(mobileNumber,rand);
     }
 
     @RequestMapping(value="/Account/EditUser/{mobileNumber}")
-    public boolean EditUser(@RequestBody UsersInfo request,@PathVariable String mobileNumber)
+    public BaseResponse EditUser(@RequestBody UsersInfo request, @PathVariable String mobileNumber)
     {
         logger.debug("Editing Users Info");
         return accountService.EditUser(request,mobileNumber);
@@ -47,6 +48,11 @@ public class AccountController
     {
         logger.debug("Passing Users Info to Client side UI");
         return accountService.GetUserInfo(mobileNumber);
+    }
+    @RequestMapping(value = "/Account/GetUserStatus/{mobileNumber}",method = RequestMethod.POST)
+    public int GetUserStatus(@PathVariable String mobileNumber)
+    {
+        return accountService.GetUserStatus(mobileNumber);
     }
 }
 

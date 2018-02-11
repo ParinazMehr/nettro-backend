@@ -1,7 +1,9 @@
 package com.taxikar.repository;
 
-import org.springframework.data.repository.CrudRepository;
+import com.taxikar.entity.DriverDetail;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface DriverDetailRepository extends CrudRepository
+
+public interface DriverDetailRepository extends JpaRepository<DriverDetail,String>
 {
 }
