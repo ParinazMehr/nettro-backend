@@ -1,9 +1,8 @@
 package com.taxikar.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 
 /**
  * Created by parinaz on 2/8/2018.
@@ -12,6 +11,9 @@ import javax.persistence.Table;
 @Table(name = "driver_detail")
 public class DriverDetail {
     @Id
+    @GeneratedValue(generator = "uuid2")
+    @Column(columnDefinition = "char(36)")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private String id;
     @Column(name = "STATUS")
     private int status;

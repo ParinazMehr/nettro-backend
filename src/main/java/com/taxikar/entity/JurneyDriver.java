@@ -13,7 +13,8 @@ import java.sql.Timestamp;
 public class JurneyDriver {
     @Id
     @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(columnDefinition = "char(36)")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private String id;
     @Column(name = "USER_ID")
     private String userId;
