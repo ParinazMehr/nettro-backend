@@ -43,6 +43,7 @@ public class Users {
     @Column(name = "TOKEN_TIMESTAMP")
     private Timestamp tokenTimeStamp;
 
+    public Users(){}
 
     public Users(String mobileNumber,String token)
     {

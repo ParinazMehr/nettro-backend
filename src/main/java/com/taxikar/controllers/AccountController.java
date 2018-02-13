@@ -44,12 +44,14 @@ public class AccountController
     }
 
     @RequestMapping(value = "/Account/GetUserInfo/{mobileNumber}",method = RequestMethod.POST)
+    @ResponseBody
     public UsersInfo GetUserInfo(@PathVariable String mobileNumber)
     {
-        logger.debug("Passing Users Info to Client side UI");
+        logger.info("Passing Users Info to Client side UI");
         return accountService.GetUserInfo(mobileNumber);
     }
     @RequestMapping(value = "/Account/GetUserStatus/{mobileNumber}",method = RequestMethod.POST)
+    @ResponseBody
     public int GetUserStatus(@PathVariable String mobileNumber)
     {
         return accountService.GetUserStatus(mobileNumber);
