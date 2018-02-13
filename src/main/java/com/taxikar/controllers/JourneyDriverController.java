@@ -9,10 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,34 +26,36 @@ public class JourneyDriverController {
         this.journeyDriverService = journeyDriverService;
     }
 
-    @RequestMapping("/journey/driver/add")
+    @RequestMapping(value = "/journey/driver/add", method = RequestMethod.POST)
     @ResponseBody
     public BaseResponse addJourneyDriver(@RequestBody JurneyDriverRequest request){
         logger.info("adding a journey from driver to database");
         return journeyDriverService.addNewJourney(request);
     }
 
-    @RequestMapping("/journey/driver/delete")
+    @RequestMapping(value = "/journey/driver/delete", method = RequestMethod.POST)
     @ResponseBody
     public BaseResponse deleteJourney(@RequestBody String id){
         logger.info("deleting journey with id: "+id);
         return journeyDriverService.deleteJourney(id);
     }
 
-    @RequestMapping("/journey/driver/edit")
+    @RequestMapping(value = "/journey/driver/edit", method = RequestMethod.POST)
     @ResponseBody
     public BaseResponse editJourney(@RequestBody EditJourneyDriverRequest request){
         logger.info("editing driver journey with id "+request.getId());
         return journeyDriverService.editDetails(request);
     }
 
-    @RequestMapping("/journey/driver/activeTrips")
+    @RequestMapping(value = "/journey/driver/activeTrips", method = RequestMethod.POST)
+    @ResponseBody
     public List<JurneyDriver> getDriverActive(@RequestParam String id){
         logger.info("getting active journey for driver with user id "+id);
         return journeyDriverService.getAllActive(id);
     }
 
-    @RequestMapping("/journey/driver/pastTrips")
+    @RequestMapping(value = "/journey/driver/pastTrips", method = RequestMethod.POST)
+    @ResponseBody
     public List<JurneyDriver> getPasstTrips(@RequestParam String id){
         logger.info("getting past trips for driver with user id "+id);
         return journeyDriverService.getAllPast(id);
