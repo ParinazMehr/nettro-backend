@@ -3,6 +3,7 @@ package com.taxikar.entity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.sql.Time;
 import java.sql.Timestamp;
 
 /**
@@ -30,6 +31,7 @@ public class Users {
     private int sex;
     @Column(name = "BIRTHDAY")
     private Timestamp birthday;
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DRIVER_DETAIL")
     private DriverDetail driverDetail;
     @Column(name = "DESCRIPTION")
@@ -38,14 +40,13 @@ public class Users {
     private String userImg;
     @Column(name = "TOKEN")
     private String token;
-    @Column(name = "TOKEN_TIME_STAMP")
-    private Long tokenTimeStamp;
+    @Column(name = "TOKEN_TIMESTAMP")
+    private Timestamp tokenTimeStamp;
 
 
     public Users(String mobileNumber,String token)
     {
         this.mobileNumber=mobileNumber;status=1;this.token=token;
-        this.tokenTimeStamp=System.currentTimeMillis();
         this.status=0;
     }
     public Users(String firstName, String lastName, String mobileNumber, String email, int status){
@@ -91,17 +92,21 @@ public class Users {
 
     public String getToken()
     {
+        return token;
+        /*this.tokenTimeStamp = new Timestamp(System.currentTimeMillis());
         if((tokenTimeStamp+(5*60*1000)) < (System.currentTimeMillis()))
             return  "PassedTimeToken";
-        return token;
+        return token;*/
     }
 
     public void setToken(String token)
     {
         this.token = token;
-        this.tokenTimeStamp=System.currentTimeMillis();
+        /*this.token = token;
+        this.tokenTimeStamp=System.currentTimeMillis();*/
     }
 
-
+    public Timestamp getTokenTimeStamp(){return tokenTimeStamp;}
+    public void setTokenTimeStamp(Timestamp tokenTimeStamp){this.tokenTimeStamp = tokenTimeStamp;}
 
 }

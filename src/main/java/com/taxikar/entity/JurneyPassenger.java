@@ -9,7 +9,7 @@ import java.sql.Timestamp;
  * Created by parinaz on 2/9/2018.
  */
 @Entity
-@Table(name = "jurney_passenger")
+@Table(name = " jurney_passenger")
 public class JurneyPassenger {
     @Id
     @GeneratedValue(generator = "uuid2")
