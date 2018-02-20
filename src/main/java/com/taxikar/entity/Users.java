@@ -47,10 +47,12 @@ public class Users {
 
     public Users(String mobileNumber,String token)
     {
-        this.mobileNumber=mobileNumber;status=1;this.token=token;
+        this.mobileNumber=mobileNumber;status=1;
+        this.token=token;
         this.status=0;
     }
-    public Users(String firstName, String lastName, String mobileNumber, String email, int status){
+    public Users(String firstName, String lastName, String mobileNumber, String email, int status)
+    {
         this.firstName = firstName;
         this.lastName = lastName;
         this.mobileNumber = mobileNumber;

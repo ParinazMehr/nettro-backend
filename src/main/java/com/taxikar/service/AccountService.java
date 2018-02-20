@@ -1,6 +1,8 @@
 package com.taxikar.service;
 
 import com.fasterxml.jackson.databind.ser.Serializers;
+
+import com.kavenegar.sdk.KavenegarApi;
 import com.taxikar.bean.BaseResponse;
 import com.taxikar.bean.UsersInfo;
 import com.taxikar.entity.Users;
@@ -11,7 +13,7 @@ import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import java.sql.Timestamp;
 import java.util.Random;
 
 @Service
@@ -23,25 +25,25 @@ public class AccountService
     public BaseResponse SendSMS(String mobileNumber)
     {
         BaseResponse baseResponse=new BaseResponse();
+        if(mobileNumber.length()!=11)
+        {
+            baseResponse.setStatus(0);
+            baseResponse.setErrorMessage("Not valid Number");
+        }
         Random random = new Random();
-
         String rand=String.format("%04d", random.nextInt(10000));
-        Users user;
-        try
+        Users user=userRepository.FindUserByMobileNumber(mobileNumber);
+        if(user!=null)
         {
-            user=userRepository.FindUserByMobileNumber(mobileNumber);
             user.setToken(rand);
-//            if(user==null)
-//                user=new Users(mobileNumber,rand);
+            user.setTokenTimeStamp(new Timestamp(System.currentTimeMillis()));
         }
-        catch (Exception P)
-        {
+        else
             user=new Users(mobileNumber,rand);
-        }
         try
         {
-            //send SMS TO mobileNumber : rand
-            //********* Need Edit
+            KavenegarApi api=new KavenegarApi("3974693536534143426E733743665170473134384C2F4D2B43417469696A702B");
+            api.verifyLookup(mobileNumber,rand,"","","NettroOtp");
             baseResponse.setStatus(1);
         }
         catch (Exception P)
@@ -55,7 +57,7 @@ public class AccountService
     {
         BaseResponse baseResponse=new BaseResponse();
         Users user=userRepository.FindUserByMobileNumber(mobileNumber);
-        if(!user.getToken().equals(rand)  || user.getToken().equals("PassedTimeToken"))
+        if(!user.getToken().equals(rand)  || (user.getTokenTimeStamp().before(new Timestamp(System.currentTimeMillis()))))
         {
             baseResponse.setStatus(0);
             baseResponse.setErrorMessage("Not Valid Code Entered");

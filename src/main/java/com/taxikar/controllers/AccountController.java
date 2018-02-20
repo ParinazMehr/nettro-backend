@@ -22,7 +22,7 @@ public class AccountController
     @Autowired
     private AccountService accountService;
 
-    @RequestMapping(value = "/SendSMS/{mobileNumber}",method = RequestMethod.POST )
+    @RequestMapping(value = "/SendSMS/{mobileNumber}",method = RequestMethod.GET )
     public BaseResponse SendSMS(@PathVariable String mobileNumber)
     {
         logger.debug("Sending SMS");
