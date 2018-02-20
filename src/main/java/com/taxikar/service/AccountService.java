@@ -29,6 +29,7 @@ public class AccountService
         {
             baseResponse.setStatus(0);
             baseResponse.setErrorMessage("Not valid Number");
+            return  baseResponse;
         }
         Random random = new Random();
         String rand=String.format("%04d", random.nextInt(10000));
@@ -39,7 +40,10 @@ public class AccountService
             user.setTokenTimeStamp(new Timestamp(System.currentTimeMillis()));
         }
         else
-            user=new Users(mobileNumber,rand);
+        {
+            user = new Users(mobileNumber, rand);
+//            userRepository.save(user);
+        }
         try
         {
             KavenegarApi api=new KavenegarApi("3974693536534143426E733743665170473134384C2F4D2B43417469696A702B");
@@ -56,7 +60,19 @@ public class AccountService
     public BaseResponse Login(String mobileNumber, String rand)
     {
         BaseResponse baseResponse=new BaseResponse();
+        if(mobileNumber.length()!=11)
+        {
+            baseResponse.setStatus(0);
+            baseResponse.setErrorMessage("Not valid Number");
+            return baseResponse;
+        }
         Users user=userRepository.FindUserByMobileNumber(mobileNumber);
+        if(user==null)
+        {
+            baseResponse.setStatus(0);
+            baseResponse.setErrorMessage("This Number dosnt exist in DB,First ask for sending SMS to it");
+            return baseResponse;
+        }
         if(!user.getToken().equals(rand)  || (user.getTokenTimeStamp().before(new Timestamp(System.currentTimeMillis()))))
         {
             baseResponse.setStatus(0);
