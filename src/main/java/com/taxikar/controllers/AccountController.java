@@ -2,7 +2,6 @@ package com.taxikar.controllers;
 
 import com.taxikar.bean.BaseResponse;
 import com.taxikar.bean.UsersInfo;
-import com.taxikar.entity.Users;
 import com.taxikar.service.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +20,7 @@ public class AccountController
 
     @Autowired
     private AccountService accountService;
+
 
     @RequestMapping(value = "/SendSMS/{mobileNumber}",method = RequestMethod.GET )
     public BaseResponse SendSMS(@PathVariable String mobileNumber)

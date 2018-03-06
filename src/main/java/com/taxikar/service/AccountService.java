@@ -5,11 +5,14 @@ import com.fasterxml.jackson.databind.ser.Serializers;
 import com.kavenegar.sdk.KavenegarApi;
 import com.taxikar.bean.BaseResponse;
 import com.taxikar.bean.UsersInfo;
+import com.taxikar.controllers.AccountController;
 import com.taxikar.entity.Users;
 import com.taxikar.enums.ResponseStatus;
 import com.taxikar.repository.UserRepository;
 
 import org.apache.catalina.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +22,14 @@ import java.util.Random;
 @Service
 public class AccountService
 {
+    private Logger logger = LoggerFactory.getLogger(AccountController.class);
+
     @Autowired
     private UserRepository userRepository;
     // send sms and login should be with registration
     public BaseResponse SendSMS(String mobileNumber)
     {
+        logger.debug("Hereeeeeee");
         BaseResponse baseResponse=new BaseResponse();
         if(mobileNumber.length()!=11)
         {

@@ -29,7 +29,7 @@ public class JourneyPassengerController {
 
     @RequestMapping("/journey/passenger/add")
     @ResponseBody
-    public BaseResponse addJourney(JourneyPassenger request){
+    public BaseResponse addJourney(JourneyPassenger request) {
         logger.info("saving a journey created by passenger");
         return journeyPassengerService.addJourney(request);
     }
