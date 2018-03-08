@@ -33,6 +33,7 @@ public class JourneyDriverService {
             //there is no trip for the driver in this time
             //add to repository
             JurneyDriver jurneyDriver = new JurneyDriver(request.getUserId(), request.getStartPos(), request.getEndPos(), request.getStartTime(), request.getSeatNumber());
+            jurneyDriver.setPrice(10000L);
             jurneyDriverRepository.save(jurneyDriver);
             return new BaseResponse(1, "no error");
         }

@@ -20,6 +20,8 @@ public class JurneyDriverRequest {
         this.seatNumber = seatNumber;
     }
 
+    public JurneyDriverRequest(){}
+
     public String getUserId(){return userId;}
     public void setUserId(String userId){this.userId = userId;}
 

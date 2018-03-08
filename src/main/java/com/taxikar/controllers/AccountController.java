@@ -23,6 +23,7 @@ public class AccountController
     private AccountService accountService;
 
     @RequestMapping(value = "/SendSMS/{mobileNumber}",method = RequestMethod.POST )
+    @ResponseBody
     public BaseResponse SendSMS(@PathVariable String mobileNumber)
     {
         logger.debug("Sending SMS");
@@ -37,9 +38,10 @@ public class AccountController
     }
 
     @RequestMapping(value="/Account/EditUser/{mobileNumber}")
+    @ResponseBody
     public BaseResponse EditUser(@RequestBody UsersInfo request, @PathVariable String mobileNumber)
     {
-        logger.debug("Editing Users Info");
+        logger.info("Editing Users Info");
         return accountService.EditUser(request,mobileNumber);
     }
 
