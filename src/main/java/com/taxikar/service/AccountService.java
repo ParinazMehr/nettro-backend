@@ -52,9 +52,9 @@ public class AccountService
         }
         try
         {
-            KavenegarApi api=new KavenegarApi("3974693536534143426E733743665170473134384C2F4D2B43417469696A702B");
+            /*KavenegarApi api=new KavenegarApi("3974693536534143426E733743665170473134384C2F4D2B43417469696A702B");
             api.verifyLookup(mobileNumber,rand,"","","NettroOtp");
-            baseResponse.setStatus(1);
+            baseResponse.setStatus(1);*/
         }
         catch (Exception P)
         {

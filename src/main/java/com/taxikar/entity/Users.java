@@ -47,9 +47,8 @@ public class Users {
 
     public Users(String mobileNumber,String token)
     {
-        this.mobileNumber=mobileNumber;status=1;
+        this.mobileNumber=mobileNumber;
         this.token=token;
-        this.status=0;
     }
     public Users(String firstName, String lastName, String mobileNumber, String email, int status)
     {
