@@ -38,7 +38,6 @@ public class AccountController
     }
 
     @RequestMapping(value="/Account/EditUser/{mobileNumber}")
-    @ResponseBody
     public BaseResponse EditUser(@RequestBody UsersInfo request, @PathVariable String mobileNumber)
     {
         logger.info("Editing Users Info");
