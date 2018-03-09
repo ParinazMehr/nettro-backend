@@ -42,16 +42,20 @@ public class Users {
     private String token;
     @Column(name = "TOKEN_TIMESTAMP")
     private Timestamp tokenTimeStamp;
+    @Column(name="SMS_COUNT")
+    private int smsCount;
 
     public Users(){}
 
-    public Users(String mobileNumber,String token)
+    public Users(String mobileNumber,String token,int smsCount)
     {
+        this.smsCount=smsCount;
         this.mobileNumber=mobileNumber;
         this.token=token;
     }
-    public Users(String firstName, String lastName, String mobileNumber, String email, int status)
+    public Users(String firstName, String lastName, String mobileNumber, String email, int status,int smsCount)
     {
+        this.smsCount=smsCount;
         this.firstName = firstName;
         this.lastName = lastName;
         this.mobileNumber = mobileNumber;
@@ -91,6 +95,9 @@ public class Users {
 
     public String getUserImg(){return userImg;}
     public void setUserImg(String userImg){this.userImg = userImg;}
+
+    public int getSmsCOUNT(){return smsCount;}
+    public void setSmsCount(int smsCount){this.smsCount = smsCount;}
 
     public String getToken()
     {

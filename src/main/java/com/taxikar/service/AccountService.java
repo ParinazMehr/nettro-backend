@@ -3,6 +3,7 @@ package com.taxikar.service;
 import com.fasterxml.jackson.databind.ser.Serializers;
 
 import com.kavenegar.sdk.KavenegarApi;
+import com.kavenegar.sdk.models.SendResult;
 import com.taxikar.bean.BaseResponse;
 import com.taxikar.bean.UsersInfo;
 import com.taxikar.controllers.AccountController;
@@ -14,16 +15,19 @@ import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.Random;
 
+
 @Service
 public class AccountService
 {
     private Logger logger = LoggerFactory.getLogger(AccountController.class);
-
+    @Value("${sms.api}")
+    private String smsAPI;
     @Autowired
     private UserRepository userRepository;
     // send sms and login should be with registration
@@ -43,19 +47,33 @@ public class AccountService
         Users user=userRepository.FindUserByMobileNumber(mobileNumber);
         if(user!=null)
         {
+            user.setSmsCount(user.getSmsCOUNT()+1);
+            if(user.getSmsCOUNT()>5)
+            {
+                baseResponse.setErrorMessage("Too many Attempts");
+                baseResponse.setStatus(0);
+                return baseResponse;
+            }
             user.setToken(rand);
             user.setTokenTimeStamp(new Timestamp(System.currentTimeMillis()));
         }
         else
         {
-            user = new Users(mobileNumber, rand);
+            user = new Users(mobileNumber, rand,0);
 //            userRepository.save(user);
         }
         try
         {
-            KavenegarApi api=new KavenegarApi("3974693536534143426E733743665170473134384C2F4D2B43417469696A702B");
-            api.verifyLookup(mobileNumber,rand,"","","NettroOtp");
-            baseResponse.setStatus(1);
+            KavenegarApi api=new KavenegarApi(smsAPI);
+            SendResult sendResult= api.verifyLookup(mobileNumber,rand,"","","NettroOtp");
+
+            if(sendResult.getStatus()==200)
+                baseResponse.setStatus(1);
+            else
+            {
+                baseResponse.setStatus(sendResult.getStatus());
+                baseResponse.setErrorMessage(sendResult.getMessage());
+            }
         }
         catch (Exception P)
         {
@@ -83,9 +101,10 @@ public class AccountService
         if(user==null)
         {
             baseResponse.setStatus(0);
-            baseResponse.setErrorMessage("This Number dosnt exist in DB,First ask for sending SMS to it");
+            baseResponse.setErrorMessage("This Number dosn't exist in DB,First ask for sending SMS to it");
             return baseResponse;
         }
+        user.setSmsCount(0);
         if(!user.getToken().equals(rand)  || (user.getTokenTimeStamp().before(new Timestamp(System.currentTimeMillis()))))
         {
             baseResponse.setStatus(0);
