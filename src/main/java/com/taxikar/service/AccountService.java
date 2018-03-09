@@ -29,9 +29,10 @@ public class AccountService
     // send sms and login should be with registration
     public BaseResponse SendSMS(String mobileNumber)
     {
-        logger.debug("Hereeeeeee");
+
         BaseResponse baseResponse=new BaseResponse();
-        if(mobileNumber.length()!=11)
+
+        if(!isValidPhoneNumber(mobileNumber))
         {
             baseResponse.setStatus(0);
             baseResponse.setErrorMessage("Not valid Number");
@@ -52,9 +53,9 @@ public class AccountService
         }
         try
         {
-            /*KavenegarApi api=new KavenegarApi("3974693536534143426E733743665170473134384C2F4D2B43417469696A702B");
+            KavenegarApi api=new KavenegarApi("3974693536534143426E733743665170473134384C2F4D2B43417469696A702B");
             api.verifyLookup(mobileNumber,rand,"","","NettroOtp");
-            baseResponse.setStatus(1);*/
+            baseResponse.setStatus(1);
         }
         catch (Exception P)
         {
@@ -63,6 +64,12 @@ public class AccountService
         }
         return  baseResponse;
     }
+    private boolean isValidPhoneNumber(String mobileNumber){
+        String regEx = "^09[0-9]{9}$";
+        return mobileNumber.matches(regEx);
+    }
+
+
     public BaseResponse Login(String mobileNumber, String rand)
     {
         BaseResponse baseResponse=new BaseResponse();
