@@ -22,4 +22,7 @@ public interface JurneyDriverRepository extends JpaRepository<JurneyDriver, Long
 
     @Query("select jr from JurneyDriver jr where jr.id=?1 and jr.startTime<?2")
     List<JurneyDriver> getAllPast(String id, Timestamp time);
+
+    @Query("select case when count(jr)>0 then true else false end from JurneyDriver jr where jr.userId=?1 and jr.startTime=?2")
+    Boolean journeyExistInTime(String userId, Timestamp start);
 }
