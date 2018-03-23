@@ -44,11 +44,14 @@ public class Users {
     private Timestamp tokenTimeStamp;
     @Column(name="SMS_COUNT")
     private int smsCount;
+    @Column(name="SMSCOUNT_TIMESTAMP")
+    private Timestamp smsCount_TimeStamp;
 
     public Users(){}
 
-    public Users(String mobileNumber,String token,int smsCount)
+    public Users(String mobileNumber,String token,int smsCount,Timestamp smsCount_TimeStamp)
     {
+        this.smsCount_TimeStamp=smsCount_TimeStamp;
         this.smsCount=smsCount;
         this.mobileNumber=mobileNumber;
         this.token=token;
@@ -118,4 +121,13 @@ public class Users {
     public Timestamp getTokenTimeStamp(){return tokenTimeStamp;}
     public void setTokenTimeStamp(Timestamp tokenTimeStamp){this.tokenTimeStamp = tokenTimeStamp;}
 
+    public Timestamp getSmsCount_TimeStamp()
+    {
+        return smsCount_TimeStamp;
+    }
+
+    public void setSmsCount_TimeStamp(Timestamp smsCount_TimeStamp)
+    {
+        this.smsCount_TimeStamp = smsCount_TimeStamp;
+    }
 }

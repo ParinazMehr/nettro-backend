@@ -1,5 +1,6 @@
 package com.taxikar.controllers;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import com.taxikar.bean.BaseResponse;
 import com.taxikar.bean.UsersInfo;
 import com.taxikar.entity.Users;
@@ -9,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.lang.reflect.Method;
 
 /**
  * Created by Jamasb on 2/10/2018.
@@ -22,11 +25,27 @@ public class AccountController
     @Autowired
     private AccountService accountService;
 
+    @RequestMapping(value = "/OnlyTesting/{testNum}",method = RequestMethod.POST )
+    @ResponseBody
+    public BaseResponse OnlyTesting(@PathVariable String testNum)
+    {
+        BaseResponse testResPonse=new BaseResponse();
+        testResPonse.setStatus(1);
+        testResPonse.setErrorMessage("No Not Woriking");
+        if(testNum=="23")
+        {
+            testResPonse.setStatus(0);
+            testResPonse.setErrorMessage("Good To Go");
+        }
+
+        return  testResPonse;
+    }
+
     @RequestMapping(value = "/SendSMS/{mobileNumber}",method = RequestMethod.POST )
     @ResponseBody
     public BaseResponse SendSMS(@PathVariable String mobileNumber)
     {
-        logger.debug("Sending SMS");
+        logger.info("Sending SMS is Started");
         return accountService.SendSMS(mobileNumber);
     }
 
