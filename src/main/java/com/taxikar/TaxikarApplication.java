@@ -6,7 +6,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class TaxikarApplication
+public class TaxikarApplication extends SpringBootServletInitializer
 {
 //    @Override
 //    protected SpringApplicationBuilder configure(SpringApplicationBuilder application)

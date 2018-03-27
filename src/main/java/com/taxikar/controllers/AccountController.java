@@ -25,13 +25,19 @@ public class AccountController
     @Autowired
     private AccountService accountService;
 
+    @RequestMapping("/")
+    public String hello()
+    {
+        return "Hello World!";
+    }
+
     @RequestMapping(value = "/OnlyTesting/{testNum}",method = RequestMethod.POST )
     @ResponseBody
     public BaseResponse OnlyTesting(@PathVariable String testNum)
     {
         BaseResponse testResPonse=new BaseResponse();
         testResPonse.setStatus(1);
-        testResPonse.setErrorMessage("No Not Woriking");
+        testResPonse.setErrorMessage("oh yeah it is working");
         if(testNum=="23")
         {
             testResPonse.setStatus(0);
