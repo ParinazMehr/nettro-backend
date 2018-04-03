@@ -68,7 +68,7 @@ public class AccountService
         else
         {
             user = new Users(mobileNumber, rand, 0, new Timestamp(System.currentTimeMillis()));
-//            userRepository.save(user);
+            userRepository.save(user);
         }
         try
         {
