@@ -56,13 +56,15 @@ public class AccountController
     }
 
     @RequestMapping(value = "/Login/{mobileNumber}/{rand}",method = RequestMethod.POST )
+    @ResponseBody
     public BaseResponse Login(@PathVariable String mobileNumber,@PathVariable String rand)
     {
         logger.debug("Starting Login Process");
         return accountService.Login(mobileNumber,rand);
     }
 
-    @RequestMapping(value="/Account/EditUser/{mobileNumber}")
+    @RequestMapping(value="/Account/EditUser/{mobileNumber}",method = RequestMethod.POST)
+    @ResponseBody
     public BaseResponse EditUser(@RequestBody UsersInfo request, @PathVariable String mobileNumber)
     {
         logger.info("Editing Users Info");

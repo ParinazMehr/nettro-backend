@@ -21,8 +21,16 @@ import java.util.Random;
 public class AccountService
 {
     private Logger logger = LoggerFactory.getLogger(AccountController.class);
+
     @Value("${sms.api}")
     private String smsAPI;
+    @Value("${sms.token.validDuration.inSec}")
+    private int smsTokenValidDurationInSec;
+    @Value("${sms.maxNum.rapidSending}")
+    private int smsMaxNumRapidSending;
+    @Value("${sms.timeToWaitForNewAttempt.inSec}")
+    private int smsTimeToWaitForNewAttemptInSec;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -30,11 +38,13 @@ public class AccountService
     public BaseResponse SendSMS(String mobileNumber)
     {
         BaseResponse baseResponse = new BaseResponse();
+        baseResponse.setStatus(1);
+        baseResponse.setErrorMessage("SMS Sent Successfully");
 
         if (!isValidPhoneNumber(mobileNumber))
         {
             baseResponse.setStatus(0);
-            baseResponse.setErrorMessage("Not valid Number");
+            baseResponse.setErrorMessage("Entered Phone number is not valid");
             return baseResponse;
         }
         Random random = new Random();
@@ -42,34 +52,31 @@ public class AccountService
         Users user = userRepository.FindUserByMobileNumber(mobileNumber);
         if (user != null)
         {
-            if (user.getSmsCOUNT() >= 5)
+            if (user.getSmsCount() > smsMaxNumRapidSending)
             {
-                if (new Timestamp(System.currentTimeMillis()).getTime() < 5555 + user.getSmsCount_TimeStamp().getTime())
+                if (new Timestamp(System.currentTimeMillis()).getTime() < (smsTimeToWaitForNewAttemptInSec*1000 + user.getSmsCount_TimeStamp().getTime()))
                 {
+
                     baseResponse.setErrorMessage("Too many Attempts");
                     baseResponse.setStatus(0);
                     return baseResponse;
                 }
                 else
-                {
-                    // user.setTokenTimeStamp(new Timestamp(System.currentTimeMillis()));
-                    user.setSmsCount(0);
-                }
+                    user.setSmsCount(1);
             }
             else
             {
-                user.setSmsCount_TimeStamp(new Timestamp(System.currentTimeMillis()));
-                user.setSmsCount(user.getSmsCOUNT() + 1);
+                if(user.getSmsCount()==5)
+                   user.setSmsCount_TimeStamp(new Timestamp(System.currentTimeMillis()));
+                user.setSmsCount(user.getSmsCount() + 1);
             }
 
             user.setToken(rand);
             user.setTokenTimeStamp(new Timestamp(System.currentTimeMillis()));
         }
         else
-        {
-            user = new Users(mobileNumber, rand, 0, new Timestamp(System.currentTimeMillis()));
-            userRepository.save(user);
-        }
+            user = new Users(mobileNumber, rand, 1, new Timestamp(System.currentTimeMillis()));
+        userRepository.save(user);
         try
         {
             KavenegarApi api = new KavenegarApi(smsAPI);
@@ -101,53 +108,62 @@ public class AccountService
     public BaseResponse Login(String mobileNumber, String rand)
     {
         BaseResponse baseResponse = new BaseResponse();
-        if (mobileNumber.length() != 11)
+        if (!isValidPhoneNumber(mobileNumber))
         {
             baseResponse.setStatus(0);
-            baseResponse.setErrorMessage("Not valid Number");
+            baseResponse.setErrorMessage("Entered Phone number is not valid");
             return baseResponse;
         }
         Users user = userRepository.FindUserByMobileNumber(mobileNumber);
         if (user == null)
         {
             baseResponse.setStatus(0);
-            baseResponse.setErrorMessage("This Number dosn't exist in DB,First ask for sending SMS to it");
+            baseResponse.setErrorMessage("This Number dosn't exist in Database,this means we haven't send any sms to it,so we are not waiting for any token which u are trying to send us, First ask for Sending SMS to this number");
+            return baseResponse;
+        }
+        if (user.getTokenTimeStamp().before(new Timestamp(System.currentTimeMillis()-smsTokenValidDurationInSec*1000)))
+        {
+            baseResponse.setStatus(0);
+            baseResponse.setErrorMessage("Not Valid Code Entered PM");
+            return baseResponse;
+        }
+        if(user.getToken()==null||!user.getToken().equals(rand))
+        {
+            baseResponse.setStatus(0);
+            baseResponse.setErrorMessage("the Entered Code is not correct");
             return baseResponse;
         }
         user.setSmsCount(0);
-        if (!user.getToken().equals(rand) || (user.getTokenTimeStamp().before(new Timestamp(System.currentTimeMillis()))))
-        {
-            baseResponse.setStatus(0);
-            baseResponse.setErrorMessage("Not Valid Code Entered");
-            return baseResponse;
-        }
+        user.setToken(null);
+        userRepository.save(user);
         baseResponse.setStatus(1);
+        baseResponse.setErrorMessage("Ok, you are in...Login successfull,The assigned token is now Destroyed,You can't Use it any More");
         return baseResponse;
     }
 
     public BaseResponse EditUser(UsersInfo NewUserValues, String mobileNumber)
     {
         BaseResponse baseResponse = new BaseResponse();
-        try
+
+        // 1. find the user with this phone number
+        Users selectedUser = userRepository.FindUserByMobileNumber(mobileNumber);
+        if(selectedUser==null)
         {
-            // 1. find the user with this phone number
-            Users selectedUser = userRepository.FindUserByMobileNumber(mobileNumber);
-            selectedUser.setBirthday(NewUserValues.getBirthday());
-            selectedUser.setDescription(NewUserValues.getDescription());
-            selectedUser.setDriverDetail(NewUserValues.getDriverDetail());
-            selectedUser.setEmail(NewUserValues.getEmail());
-            selectedUser.setFirstName(NewUserValues.getFirstName());
-            selectedUser.setLastName(NewUserValues.getLastName());
-            selectedUser.setSex(NewUserValues.getSex());
-            selectedUser.setUserImg(NewUserValues.getUserImg());
-            userRepository.save(selectedUser);
-            baseResponse.setStatus(1);
-        }
-        catch (Exception error)
-        {
-            baseResponse.setErrorMessage(error.toString());
+            baseResponse.setErrorMessage("this Phone Number does'nt exist in DB,either your are stuPid in tyPing :D or the backend is hacked !! ");
             baseResponse.setStatus(0);
         }
+        selectedUser.setBirthday(NewUserValues.getBirthday());
+        selectedUser.setDescription(NewUserValues.getDescription());
+        selectedUser.setDriverDetail(NewUserValues.getDriverDetail());
+        selectedUser.setEmail(NewUserValues.getEmail());
+        selectedUser.setFirstName(NewUserValues.getFirstName());
+        selectedUser.setLastName(NewUserValues.getLastName());
+        selectedUser.setSex(NewUserValues.getSex());
+        selectedUser.setUserImg(NewUserValues.getUserImg());
+
+        userRepository.save(selectedUser);
+        baseResponse.setStatus(1);
+        baseResponse.setErrorMessage("No Error,Good... by the way let's talk... I'm a lonely Compiled Code What about you? tell me about your self ");
         return baseResponse;
     }
 

@@ -51,6 +51,10 @@ public class Users {
 
     public Users(String mobileNumber,String token,int smsCount,Timestamp smsCount_TimeStamp)
     {
+        this.firstName="";
+        this.lastName="";
+
+
         this.smsCount_TimeStamp=smsCount_TimeStamp;
         this.smsCount=smsCount;
         this.mobileNumber=mobileNumber;
@@ -99,7 +103,7 @@ public class Users {
     public String getUserImg(){return userImg;}
     public void setUserImg(String userImg){this.userImg = userImg;}
 
-    public int getSmsCOUNT(){return smsCount;}
+    public int getSmsCount(){return smsCount;}
     public void setSmsCount(int smsCount){this.smsCount = smsCount;}
 
     public String getToken()
