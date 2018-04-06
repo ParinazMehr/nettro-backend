@@ -4,8 +4,11 @@ import com.kavenegar.sdk.KavenegarApi;
 import com.kavenegar.sdk.models.SendResult;
 import com.taxikar.bean.BaseResponse;
 import com.taxikar.bean.UsersInfo;
+import com.taxikar.bean.request.FavoritesRequest;
 import com.taxikar.controllers.AccountController;
+import com.taxikar.entity.Favorites;
 import com.taxikar.entity.Users;
+import com.taxikar.repository.FavoritesRepository;
 import com.taxikar.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Random;
 
 
@@ -33,7 +37,8 @@ public class AccountService
 
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private FavoritesRepository favoritesRepository;
     // send sms and login should be with registration
     public BaseResponse SendSMS(String mobileNumber)
     {
@@ -59,6 +64,7 @@ public class AccountService
 
                     baseResponse.setErrorMessage("Too many Attempts");
                     baseResponse.setStatus(0);
+                    baseResponse.setUserID(user.getId());
                     return baseResponse;
                 }
                 else
@@ -81,20 +87,21 @@ public class AccountService
         {
             KavenegarApi api = new KavenegarApi(smsAPI);
             SendResult sendResult = api.verifyLookup(mobileNumber, rand, "", "", "NettroOtp");
-
-            if (sendResult.getStatus() == 200)
-                baseResponse.setStatus(1);
-            else
+            if(sendResult.getStatus() == 6 ||sendResult.getStatus() == 11 ||sendResult.getStatus() == 13)
             {
-                baseResponse.setStatus(sendResult.getStatus());
+                baseResponse.setStatus(0);
                 baseResponse.setErrorMessage(sendResult.getMessage());
             }
+            else
+                baseResponse.setStatus(1);
+            baseResponse.setErrorCode(sendResult.getStatus());
         }
         catch (Exception P)
         {
             baseResponse.setErrorMessage(P.toString());
             baseResponse.setStatus(0);
         }
+        baseResponse.setUserID(user.getId());
         return baseResponse;
     }
 
@@ -121,6 +128,7 @@ public class AccountService
             baseResponse.setErrorMessage("This Number dosn't exist in Database,this means we haven't send any sms to it,so we are not waiting for any token which u are trying to send us, First ask for Sending SMS to this number");
             return baseResponse;
         }
+        baseResponse.setUserID(user.getId());
         if (user.getTokenTimeStamp().before(new Timestamp(System.currentTimeMillis()-smsTokenValidDurationInSec*1000)))
         {
             baseResponse.setStatus(0);
@@ -152,6 +160,8 @@ public class AccountService
             baseResponse.setErrorMessage("this Phone Number does'nt exist in DB,either your are stuPid in tyPing :D or the backend is hacked !! ");
             baseResponse.setStatus(0);
         }
+        baseResponse.setUserID(selectedUser.getId());
+
         selectedUser.setBirthday(NewUserValues.getBirthday());
         selectedUser.setDescription(NewUserValues.getDescription());
         selectedUser.setDriverDetail(NewUserValues.getDriverDetail());
@@ -170,11 +180,100 @@ public class AccountService
     public UsersInfo GetUserInfo(String mobileNumber)
     {
         Users selectedUser = userRepository.FindUserByMobileNumber(mobileNumber);
-        return new UsersInfo(selectedUser.getFirstName(), selectedUser.getLastName(), selectedUser.getMobileNumber(), selectedUser.getEmail(), selectedUser.getStatus(), selectedUser.getSex(), selectedUser.getBirthday(), selectedUser.getDriverDetail(), selectedUser.getDescription(), selectedUser.getUserImg());
+        return new UsersInfo(selectedUser.getFirstName(), selectedUser.getLastName(), selectedUser.getMobileNumber(), selectedUser.getEmail(), selectedUser.getStatus(), selectedUser.getSex(), selectedUser.getBirthday(), selectedUser.getDriverDetail(), selectedUser.getDescription(), selectedUser.getUserImg(),selectedUser.getId());
     }
 
     public int GetUserStatus(String mobileNumber)
     {
         return userRepository.FindUserByMobileNumber(mobileNumber).getStatus();
+    }
+
+    public BaseResponse AddFavorite(FavoritesRequest addFavoriteRequest, String phoneNumber)
+    {
+        BaseResponse baseResponse=new BaseResponse();
+        baseResponse.setStatus(1);
+        baseResponse.setErrorMessage("Good,I mean Successful");
+
+        Users selectedUser=userRepository.FindUserByMobileNumber(phoneNumber);
+        if(selectedUser==null)
+        {
+            baseResponse.setStatus(0);
+            baseResponse.setErrorMessage("Wrong phone number");
+            return baseResponse;
+        }
+
+        baseResponse.setUserID(selectedUser.getId());
+
+        Favorites favorite=new Favorites(selectedUser.getId(),addFavoriteRequest.getFavoriteName(),addFavoriteRequest.getFavoritePos(),new Timestamp(System.currentTimeMillis()),"0");
+        favoritesRepository.save(favorite);
+        return baseResponse;
+    }
+
+    public BaseResponse RemoveFavorite(String favoriteID)
+    {
+        BaseResponse baseResponse=new BaseResponse();
+        baseResponse.setStatus(1);
+        baseResponse.setErrorMessage("Successful");
+
+        Favorites favorite=favoritesRepository.getOneFavorite(favoriteID);
+        if(favorite==null)
+        {
+            baseResponse.setStatus(0);
+            baseResponse.setErrorMessage("No favorite with this ID:"+favoriteID);
+            return baseResponse;
+        }
+        favoritesRepository.delete(favorite);
+
+        return baseResponse;
+    }
+
+    public BaseResponse EditFavorite(FavoritesRequest editFavoriteRequest, String favoriteID)
+    {
+        BaseResponse baseResponse=new BaseResponse();
+        baseResponse.setStatus(1);
+        baseResponse.setErrorMessage("Successful");
+
+        Favorites favorite=favoritesRepository.getOneFavorite(favoriteID);
+        if(favorite==null)
+        {
+            baseResponse.setStatus(0);
+            baseResponse.setErrorMessage("No favorite with this ID:"+favoriteID);
+            return baseResponse;
+        }
+        favorite.setFavoriteName(editFavoriteRequest.getFavoriteName());
+        favorite.setFavoritePos(editFavoriteRequest.getFavoritePos());
+        favorite.setFavoriteTimeStamp(new Timestamp(System.currentTimeMillis()));
+
+        favoritesRepository.save(favorite);
+        return baseResponse;
+    }
+
+    public List<Favorites> GetFavoriteList(String phoneNumber)
+    {
+        Users selectedUser=userRepository.FindUserByMobileNumber(phoneNumber);
+        if(selectedUser==null)
+            return null;
+
+        List<Favorites> favoriteList = favoritesRepository.getAllFavorites(selectedUser.getId());
+        return favoriteList;
+    }
+
+    public BaseResponse AddFavoriteUsage(String favoriteID)
+    {
+        BaseResponse baseResponse=new BaseResponse();
+        baseResponse.setStatus(1);
+        baseResponse.setErrorMessage("Successful");
+
+        Favorites favorite=favoritesRepository.getOneFavorite(favoriteID);
+        if(favorite==null)
+        {
+            baseResponse.setStatus(0);
+            baseResponse.setErrorMessage("No favorite with this ID:"+favoriteID);
+            return baseResponse;
+        }
+        favorite.setFavoriteNumberOFUses((Integer.parseInt(favorite.getFavoriteNumberOFUses())+1)+"");
+        favoritesRepository.save(favorite);
+
+        return baseResponse;
     }
 }
