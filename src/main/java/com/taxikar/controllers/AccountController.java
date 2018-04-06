@@ -65,6 +65,14 @@ public class AccountController
     {
         return accountService.GetUserStatus(mobileNumber);
     }
+    @RequestMapping(value = "/Account/DeleteUser/{mobileNumber}",method = RequestMethod.POST)
+    @ResponseBody
+    public BaseResponse DeleteUser(@PathVariable String mobileNumber)
+    {
+        return accountService.DeleteUser(mobileNumber);
+    }
+
+
 
     @RequestMapping(value = "/Account/AddFavorite/{PhoneNumber}",method = RequestMethod.POST)
     @ResponseBody
