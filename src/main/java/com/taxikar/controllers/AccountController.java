@@ -3,6 +3,8 @@ package com.taxikar.controllers;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import com.taxikar.bean.BaseResponse;
 import com.taxikar.bean.UsersInfo;
+import com.taxikar.bean.request.FavoritesRequest;
+import com.taxikar.entity.Favorites;
 import com.taxikar.entity.Users;
 import com.taxikar.service.AccountService;
 import org.slf4j.Logger;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * Created by Jamasb on 2/10/2018.
@@ -24,28 +27,6 @@ public class AccountController
 
     @Autowired
     private AccountService accountService;
-
-    @RequestMapping("/")
-    public String hello()
-    {
-        return "Hello World!";
-    }
-
-    @RequestMapping(value = "/OnlyTesting/{testNum}",method = RequestMethod.POST )
-    @ResponseBody
-    public BaseResponse OnlyTesting(@PathVariable String testNum)
-    {
-        BaseResponse testResPonse=new BaseResponse();
-        testResPonse.setStatus(1);
-        testResPonse.setErrorMessage("oh yeah it is working");
-        if(testNum=="23")
-        {
-            testResPonse.setStatus(0);
-            testResPonse.setErrorMessage("Good To Go");
-        }
-
-        return  testResPonse;
-    }
 
     @RequestMapping(value = "/SendSMS/{mobileNumber}",method = RequestMethod.POST )
     @ResponseBody
@@ -84,5 +65,50 @@ public class AccountController
     {
         return accountService.GetUserStatus(mobileNumber);
     }
+    @RequestMapping(value = "/Account/DeleteUser/{mobileNumber}",method = RequestMethod.POST)
+    @ResponseBody
+    public BaseResponse DeleteUser(@PathVariable String mobileNumber)
+    {
+        return accountService.DeleteUser(mobileNumber);
+    }
+
+
+
+    @RequestMapping(value = "/Account/AddFavorite/{PhoneNumber}",method = RequestMethod.POST)
+    @ResponseBody
+    public BaseResponse AddFavorite(@RequestBody FavoritesRequest AddFavoriteRequest,@PathVariable String PhoneNumber)
+    {
+        return  accountService.AddFavorite(AddFavoriteRequest,PhoneNumber);
+    }
+
+    @RequestMapping(value = "/Account/EditFavorite/{FavoriteID}",method = RequestMethod.POST)
+    @ResponseBody
+    public BaseResponse EditFavorite(@RequestBody FavoritesRequest AddFavoriteRequest,@PathVariable String FavoriteID)
+    {
+        return  accountService.EditFavorite(AddFavoriteRequest,FavoriteID);
+    }
+
+    @RequestMapping(value = "/Account/RemoveFavorite/{FavoriteID}",method = RequestMethod.POST)
+    @ResponseBody
+    public BaseResponse RemoveFavorite(@PathVariable String FavoriteID)
+    {
+        return  accountService.RemoveFavorite(FavoriteID);
+    }
+
+    @RequestMapping(value = "/Account/GetFavoriteList/{PhoneNumber}",method = RequestMethod.POST)
+    @ResponseBody
+    public List<Favorites> GetFavoriteList(@PathVariable String PhoneNumber)
+    {
+        return accountService.GetFavoriteList(PhoneNumber);
+    }
+
+    @RequestMapping(value = "/Account/AddFavoriteUsage/{FavoriteID}",method = RequestMethod.POST)
+    @ResponseBody
+    public BaseResponse AddFavoriteUsage(@PathVariable String FavoriteID)
+    {
+        return  accountService.AddFavoriteUsage(FavoriteID);
+    }
+
+
 }
 
