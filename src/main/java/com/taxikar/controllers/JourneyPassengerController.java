@@ -1,6 +1,7 @@
 package com.taxikar.controllers;
 
 import com.taxikar.bean.BaseResponse;
+import com.taxikar.bean.request.DeleteJourneyRequestBean;
 import com.taxikar.bean.request.EditJourneyPassengerRequest;
 import com.taxikar.bean.request.JourneyPassenger;
 import com.taxikar.entity.JurneyPassenger;
@@ -36,9 +37,9 @@ public class JourneyPassengerController {
 
     @RequestMapping("/journey/passenger/delete")
     @ResponseBody
-    public BaseResponse deleteJourney(@RequestParam String id){
-        logger.info("removing journey with id "+id);
-        return journeyPassengerService.deleteJourney(id);
+    public BaseResponse deleteJourney(@RequestParam DeleteJourneyRequestBean requestBean){
+        logger.info("removing journey with id "+requestBean.getId());
+        return journeyPassengerService.deleteJourney(requestBean.getId(), requestBean.getUserId());
     }
 
 

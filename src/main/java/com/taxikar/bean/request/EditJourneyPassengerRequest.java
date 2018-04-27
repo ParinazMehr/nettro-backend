@@ -7,6 +7,7 @@ import java.sql.Timestamp;
  */
 public class EditJourneyPassengerRequest {
     private String id;
+    private String userId;
     private String startPos;
     private String endPos;
     private int seatNumber;
@@ -18,6 +19,9 @@ public class EditJourneyPassengerRequest {
 
     public String getId(){return id;}
     public void setId(String id){this.id= id;}
+
+    public String getUserId(){return userId;}
+    public void setUserId(String userId){this.userId = userId;}
 
     public String getStartPos(){return startPos;}
     public void setStartPos(String startPos){this.startPos = startPos;}

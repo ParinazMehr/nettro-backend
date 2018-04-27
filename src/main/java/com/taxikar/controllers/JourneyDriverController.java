@@ -1,5 +1,6 @@
 package com.taxikar.controllers;
 
+import com.taxikar.bean.request.DeleteJourneyRequestBean;
 import com.taxikar.bean.request.EditJourneyDriverRequest;
 import com.taxikar.bean.request.JurneyDriverRequest;
 import com.taxikar.bean.BaseResponse;
@@ -35,9 +36,9 @@ public class JourneyDriverController {
 
     @RequestMapping(value = "/journey/driver/delete", method = RequestMethod.POST)
     @ResponseBody
-    public BaseResponse deleteJourney(@RequestBody String id){
-        logger.info("deleting journey with id: "+id);
-        return journeyDriverService.deleteJourney(id);
+    public BaseResponse deleteJourney(@RequestBody DeleteJourneyRequestBean requestBean){
+        logger.info("deleting journey with id: "+requestBean.getId());
+        return journeyDriverService.deleteJourney(requestBean.getId(), requestBean.getUserId());
     }
 
     @RequestMapping(value = "/journey/driver/edit", method = RequestMethod.POST)
