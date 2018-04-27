@@ -6,8 +6,10 @@ import com.taxikar.bean.BaseResponse;
 import com.taxikar.bean.UsersInfo;
 import com.taxikar.bean.request.FavoritesRequest;
 import com.taxikar.controllers.AccountController;
+import com.taxikar.entity.DriverDetail;
 import com.taxikar.entity.Favorites;
 import com.taxikar.entity.Users;
+import com.taxikar.repository.DriverDetailRepository;
 import com.taxikar.repository.FavoritesRepository;
 import com.taxikar.repository.UserRepository;
 import org.slf4j.Logger;
@@ -39,6 +41,11 @@ public class AccountService
     private UserRepository userRepository;
     @Autowired
     private FavoritesRepository favoritesRepository;
+    @Autowired
+    private DriverDetailRepository driverDetailRepository;
+
+
+
     // send sms and login should be with registration
     public BaseResponse SendSMS(String mobileNumber)
     {
@@ -111,7 +118,6 @@ public class AccountService
         return mobileNumber.matches(regEx);
     }
 
-
     public BaseResponse Login(String mobileNumber, String rand)
     {
         BaseResponse baseResponse = new BaseResponse();
@@ -161,13 +167,24 @@ public class AccountService
             baseResponse.setStatus(0);
         }
         baseResponse.setUserID(selectedUser.getId());
-
         if(NewUserValues.getBirthday()!=null)
             selectedUser.setBirthday(NewUserValues.getBirthday());
         if(NewUserValues.getDescription()!=null)
             selectedUser.setDescription(NewUserValues.getDescription());
-        if(NewUserValues.getDriverDetail()!=null)
-            selectedUser.setDriverDetail(NewUserValues.getDriverDetail());
+
+ //       if(NewUserValues.getDriverDetail().getLisenceImg()!=null)
+   //    {
+            DriverDetail temp=selectedUser.getDriverDetail();
+            if(temp==null)
+                temp=new DriverDetail();
+            temp.setInsuranceImg(NewUserValues.getDriverDetail().getInsuranceImg());
+            temp.setLisenceImg(NewUserValues.getDriverDetail().getLisenceImg());
+            temp.setStatus(NewUserValues.getDriverDetail().getStatus());
+            selectedUser.setDriverDetail(temp);
+            driverDetailRepository.save(temp);
+    //    }
+
+
         if(NewUserValues.getEmail()!=null)
         selectedUser.setEmail(NewUserValues.getEmail());
         if(NewUserValues.getFirstName()!=null)
@@ -180,6 +197,7 @@ public class AccountService
             selectedUser.setUserImg(NewUserValues.getUserImg());
 
         userRepository.save(selectedUser);
+
         baseResponse.setStatus(1);
         baseResponse.setErrorMessage("No Error, Good... by the way let's talk... I'm a lonely Compiled Code What about you? tell Me More about yourself :)");
         return baseResponse;
@@ -195,40 +213,40 @@ public class AccountService
     {
         return userRepository.FindUserByMobileNumber(mobileNumber).getStatus();
     }
-    public BaseResponse DeleteUser(String PhoneNumber)
-    {
-        BaseResponse baseResponse=new BaseResponse();
-        baseResponse.setStatus(1);
-        baseResponse.setErrorMessage("Successful");
-        Users selectedUser=userRepository.FindUserByMobileNumber(PhoneNumber);
-        if(selectedUser==null)
-        {
-            baseResponse.setStatus(0);
-            baseResponse.setErrorMessage("No user with this Phone Number");
-            return baseResponse;
-        }
-        baseResponse.setUserID(selectedUser.getId());
-
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////
-        //////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////
-        /////////////////////////////////////
-        //////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////
-        //PPPPPut Every other table here
-        for(int P=0;P<favoritesRepository.getAllFavorites(selectedUser.getId()).size();P++)
-        {
-            Favorites temp=favoritesRepository.getAllFavorites(selectedUser.getId()).get(P);
-            favoritesRepository.delete(temp);
-        }
-        userRepository.delete(selectedUser);
-
-
-        return baseResponse;
-    }
+//    public BaseResponse DeleteUser(String PhoneNumber)
+//    {
+//        BaseResponse baseResponse=new BaseResponse();
+//        baseResponse.setStatus(1);
+//        baseResponse.setErrorMessage("Successful");
+//        Users selectedUser=userRepository.FindUserByMobileNumber(PhoneNumber);
+//        if(selectedUser==null)
+//        {
+//            baseResponse.setStatus(0);
+//            baseResponse.setErrorMessage("No user with this Phone Number");
+//            return baseResponse;
+//        }
+//        baseResponse.setUserID(selectedUser.getId());
+//
+//
+//        ////////////////////////////////////////////////////////////////////////////////////////////
+//        /////////////////////////////////////
+//        //////////////////////////////////////////////////////////
+//        ////////////////////////////////////////////////////////////////////////////////////////
+//        ////////////////
+//        /////////////////////////////////////
+//        //////////////////////////////////////////////////////////
+//        ////////////////////////////////////////////////////////////////////////////////////////
+//        //PPPPPut Every other table here
+//        for(int P=0;P<favoritesRepository.getAllFavorites(selectedUser.getId()).size();P++)
+//        {
+//            Favorites temp=favoritesRepository.getAllFavorites(selectedUser.getId()).get(P);
+//            favoritesRepository.delete(temp);
+//        }
+//        userRepository.delete(selectedUser);
+//
+//
+//        return baseResponse;
+//    }
 
     public BaseResponse AddFavorite(FavoritesRequest addFavoriteRequest, String PhoneNumber)
     {
@@ -279,7 +297,7 @@ public class AccountService
         if(favorite==null)
         {
             baseResponse.setStatus(0);
-            baseResponse.setErrorMessage("No favorite with this ID:"+favoriteID);
+            baseResponse.setErrorMessage("a:"+favoriteID);
             return baseResponse;
         }
         favorite.setFavoriteName(editFavoriteRequest.getFavoriteName());

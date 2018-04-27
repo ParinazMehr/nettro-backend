@@ -11,6 +11,7 @@ public class BaseResponse {
     private int status;
     private int errorCode;
     private String errorMessage;
+    
 
     public BaseResponse(){}
     public BaseResponse(int status, String errorMessage){

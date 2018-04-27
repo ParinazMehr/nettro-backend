@@ -23,6 +23,19 @@ public class DriverDetail {
     private String insuranceImg;
 
     public DriverDetail(){}
+
+    public DriverDetail(String licenceImg)
+    {
+        this.licenceImg = licenceImg;
+    }
+
+    public DriverDetail(int status, String licenceImg, String insuranceImg)
+    {
+        this.status = status;
+        this.licenceImg = licenceImg;
+        this.insuranceImg =insuranceImg;
+    }
+
     public DriverDetail(int status){this.status = status;}
 
     public String getId(){return id;}
